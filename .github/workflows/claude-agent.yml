@@ -1,0 +1,30 @@
+name: Claude Code Agent
+
+# コメントのトリガーは一旦消し、PRの作成・更新時のみに絞ります
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  claude-action:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude Code Action Official
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # ⬇️ 強制プロンプト。これがあると問答無用でレビューを開始します
+          prompt: "このPull Requestのコード変更内容をレビューし、バグの可能性や改善点を日本語で指摘してください。"
+          display_report: true
+          claude_args: "--max-turns 5"
