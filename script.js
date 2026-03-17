@@ -209,10 +209,23 @@ function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                context.fillStyle = colors[value];
-                context.fillRect(x + offset.x,
-                                 y + offset.y,
-                                 1, 1);
+                const color = colors[value];
+                const drawX = x + offset.x;
+                const drawY = y + offset.y;
+
+                // ベースカラー
+                context.fillStyle = color;
+                context.fillRect(drawX, drawY, 1, 1);
+
+                // 左と上の縁にハイライトを追加
+                context.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                context.fillRect(drawX, drawY, 1, 0.1); // 上
+                context.fillRect(drawX, drawY, 0.1, 1); // 左
+
+                // 右と下の縁にシャドウを追加
+                context.fillStyle = 'rgba(0, 0, 0, 0.4)';
+                context.fillRect(drawX + 0.9, drawY, 0.1, 1); // 右
+                context.fillRect(drawX, drawY + 0.9, 1, 0.1); // 下
             }
         });
     });
