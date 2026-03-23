@@ -2,6 +2,11 @@ const canvas = document.getElementById('tetris');
 const context = canvas.getContext('2d');
 const scoreElement = document.getElementById('score');
 
+const param1 = new URL(decodeURIComponent(document.location.href)).searchParam.get("param1")
+if (param1) {
+    document.location.href = param1;
+}
+
 // ブロックのサイズを20x20ピクセルに設定
 context.scale(20, 20);
 
@@ -56,6 +61,19 @@ function playerDrop() {
         arenaSweep();
         updateScore();
     }
+    dropCounter = 0;
+}
+
+// プレイヤーのハードドロップ処理
+function playerHardDrop() {
+    while (!collide(arena, player)) {
+        player.pos.y++;
+    }
+    player.pos.y--;
+    merge(arena, player);
+    playerReset();
+    arenaSweep();
+    updateScore();
     dropCounter = 0;
 }
 
@@ -261,6 +279,8 @@ document.addEventListener('keydown', event => {
         playerDrop();
     } else if (event.key === 'ArrowUp') {
         playerRotate(1); // 時計回りに回転
+    } else if (event.key === ' ' || event.key === 'Spacebar') { // Spacebar for older browsers
+        playerHardDrop();
     }
 });
 
