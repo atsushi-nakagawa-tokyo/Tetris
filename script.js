@@ -59,6 +59,19 @@ function playerDrop() {
     dropCounter = 0;
 }
 
+// プレイヤーのハードドロップ処理
+function playerHardDrop() {
+    while (!collide(arena, player)) {
+        player.pos.y++;
+    }
+    player.pos.y--;
+    merge(arena, player);
+    playerReset();
+    arenaSweep();
+    updateScore();
+    dropCounter = 0;
+}
+
 // プレイヤーの移動
 function playerMove(offset) {
     player.pos.x += offset;
@@ -261,6 +274,8 @@ document.addEventListener('keydown', event => {
         playerDrop();
     } else if (event.key === 'ArrowUp') {
         playerRotate(1); // 時計回りに回転
+    } else if (event.key === ' ' || event.key === 'Spacebar') { // Spacebar for older browsers
+        playerHardDrop();
     }
 });
 
